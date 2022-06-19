@@ -7,9 +7,28 @@
 <body>
     <div id="numConverter">
         Convert from base ten to dozenal:
-        <input type="text" id="numConverterInput" oninput="console.log(':)')"></input>
+        <input type="text" id="numConverterInput"></input>
         <div id="convertedNum"></div>
     </div>
+    <div id="baseInputs">
+        Updated base units relative to SI-units (input in base ten)
+        <br/>
+        <br/>
+        <!--MOVE TO JS-->
+        <input type="number" step="0.01" id="inputLengthMeters" value="1" oninput="unitsUpdated();"> Length in meters</input>
+        <br/>
+        <input type="number" step="0.01" id="inputMassKilograms" value="1" oninput="unitsUpdated();"> Mass in kilograms</input>
+        <br/>
+        <input type="number" step="0.01" id="inputTimeSeconds" value="1" oninput="unitsUpdated();"> Time in seconds</input>
+        <br/>
+        <input type="number" step="0.01" id="inputTemperatureKelvins" value="1" oninput="unitsUpdated();"> Temperature in kelvins</input>
+        <br/>
+        <input type="number" step="0.01" id="inputChargeCoulombs" value="1" oninput="unitsUpdated();"> Charge in coulombs</input>
+    </div>
+    <br/>
+    <div id="natureValues"></div>
+
+    <script src="naturalConstants.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
