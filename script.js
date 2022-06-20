@@ -1,6 +1,6 @@
 // TODO? Luvuista erillinen objekti/luokka
 
-const dozenalDigits = "023456789XE";
+const dozenalDigits = "0123456789XE";
 
 // Create a representation of a floating point number in an arbitrary base number system.
 // The return value consists of two arrays that contain the coefficients with the most
@@ -39,10 +39,14 @@ function numToString(intArray, fracArray, baseString) {
     return numString; 
 }
 
-// A useful special case combining two previously defined functions
-function toDozenal(floatNumber) {
-    let x = floatToBaseArray(floatNumber, 12);
+function toBase(floatNumber, baseString) {
+    let x = floatToBaseArray(floatNumber, baseString.length);
     return numToString(x.intArray, x.fracArray, dozenalDigits);
+}
+
+// A useful special case
+function toDozenal(floatNumber) {
+    return toBase(floatNumber, dozenalDigits);
 }
 
 function truncFraction(frac, precision) {
@@ -56,13 +60,13 @@ function truncFraction(frac, precision) {
     return frac.slice(0, idx_point+precision+1) + frac.slice(idx_e);
 } 
 
-function numstringToExponential(numString) {
+function numstringToExponential(numString, baseString) {
     // ASSUMES NUMSTRING IS NONNEGATIVE
     if (numString.length == 1) {
         return numString;
     }
     if (!numString.includes(".")) {
-        return numString[0] + "." + numString.slice(1) + "e+" + (numString.length-1);
+        return numString[0] + "." + numString.slice(1) + "e+" + toBase(numString.length-1, baseString);
     }
 
     if (numString[0] == ".") {
@@ -72,7 +76,7 @@ function numstringToExponential(numString) {
     let i = numString.indexOf(".");
     if (i > 1) {
         let intPart = numString.slice(0,i);
-        return intPart[0] + "." + intPart.slice(1) + numString.slice(i+1) + "e+" + (i-1);
+        return intPart[0] + "." + intPart.slice(1) + numString.slice(i+1) + "e+" + toBase(i-1, baseString);
     }
     // i == 1
     if (numString[0] != "0") {
@@ -82,7 +86,7 @@ function numstringToExponential(numString) {
     while (numString[i+1] == "0") {
         i++;
     }  
-    return numString[i+1] + "." + numString.slice(i+2) + "e-" + (i);
+    return numString[i+1] + "." + numString.slice(i+2) + "e-" + toBase(i, baseString);
 }
 
 let convertOutput = document.getElementById("convertedNum");
@@ -120,10 +124,10 @@ function createConstantsTable() {
 
         const precision = 8;
         decSI.innerHTML = value.value.toExponential(precision);
-        dozSI.innerHTML = truncFraction( numstringToExponential(toDozenal(value.value)), precision );
+        dozSI.innerHTML = truncFraction( numstringToExponential(toDozenal(value.value), dozenalDigits), precision );
         let newUnits = value.value / lengthMeters**value.dim[0] / massKilograms**value.dim[1] / timeSeconds**value.dim[2] / temperatureKelvins**value.dim[3] / chargeCoulombs**value.dim[4];
         dec.innerHTML = truncFraction( newUnits.toExponential(), precision );
-        doz.innerHTML = truncFraction( numstringToExponential(toDozenal(newUnits)), precision );
+        doz.innerHTML = truncFraction( numstringToExponential(toDozenal(newUnits),dozenalDigits), precision );
 
         [name, doz, dec, dozSI, decSI].forEach(x => row.appendChild(x));
 
