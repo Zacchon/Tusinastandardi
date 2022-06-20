@@ -122,6 +122,19 @@ convertInput.oninput = function() {
     convertOutput.innerHTML = toDozenal(convertInput.value);
 };
 
+// A function to generate easy-to-remember numbers in a given base.
+// Returns a dictionary of numbers in the base as well as their float values.
+function easyNumbers(baseString) {
+    let numbers = [];
+    for (let i=0; i<baseString.length; i++) {
+        numbers.push(baseString[i]);
+    }
+    let numbersDict = {};
+    numbers.forEach(x => numbersDict[x] = fromBaseToFloat(x, baseString));
+    return numbersDict;
+}
+
+
 let lengthMeters = 1.0;
 let massKilograms = 1.0;
 let timeSeconds = 1.0;
