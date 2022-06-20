@@ -49,6 +49,33 @@ function toDozenal(floatNumber) {
     return toBase(floatNumber, dozenalDigits);
 }
 
+function fromBaseToFloat(numString, baseString) {
+    let idx_point = numString.indexOf(".");
+    let idx_e = numString.indexOf("e");
+    let fractionalPart = (idx_point == -1) ? 0 : (idx_e != -1) ? numString.slice(idx_point+1, idx_e) : numString.slice(idx_point+1);
+    let integerPart = (idx_point == -1) ? numString.slice(0) : numString.slice(0, idx_point);
+    if (integerPart[0] == "-") {
+        integerPart = integerPart.slice(1);
+    }
+
+    let floatNum = 0.0;
+    for (let i=0; i<integerPart.length; i++) {
+        floatNum += baseString.indexOf(integerPart[integerPart.length-1-i])*baseString.length**i;
+
+    }
+    for (let i=0; i<fractionalPart.length; i++) {
+        floatNum += baseString.indexOf(fractionalPart[i])*baseString.length**-(i+1);
+    }
+
+    if (numString[0] == "-") {
+        floatNum *= -1;
+    }
+    if (idx_e != -1) {
+        floatNum *= baseString.length**fromBaseToFloat(numString.slice(idx_e + 1), baseString);
+    }
+    return floatNum;
+}
+
 function truncFraction(frac, precision) {
     let idx_point = frac.indexOf(".");
     let idx_e = frac.indexOf("e");
