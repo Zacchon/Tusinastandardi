@@ -125,9 +125,20 @@ convertInput.oninput = function() {
 // A function to generate easy-to-remember numbers in a given base.
 // Returns a dictionary of numbers in the base as well as their float values.
 function easyNumbers(baseString) {
+    const B = baseString.length;
     let numbers = [];
-    for (let i=0; i<baseString.length; i++) {
+    for (let i=0; i<B; i++) {
         numbers.push(baseString[i]);
+        numbers.push(toBase(B*i/(B-1), baseString));
+        let increasing = "";
+        let decreasing = "";
+        for (let j=0; j<B; j++) {
+            let num = baseString[(i+j) % B];
+            increasing += num;
+            decreasing = num + decreasing;
+        }
+        numbers.push(increasing[0] + "." + increasing.slice(1));
+        numbers.push(decreasing[0] + "." + decreasing.slice(1));
     }
     let numbersDict = {};
     numbers.forEach(x => numbersDict[x] = fromBaseToFloat(x, baseString));
